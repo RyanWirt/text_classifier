@@ -125,6 +125,8 @@ def chunk_text(text: str, chunk_size: int, chunk_overlap: int) -> list[str]:
         raise ValueError("chunk_size must be greater than zero")
     if chunk_overlap < 0:
         raise ValueError("chunk_overlap must be zero or greater")
+    if chunk_overlap >= chunk_size:
+        raise ValueError("chunk_overlap must be smaller than chunk_size")
 
     chunks: list[str] = []
     start = 0

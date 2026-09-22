@@ -8,15 +8,15 @@ Starter workspace for experimenting with `pydantic-ai` agents that review DSM-V-
 - Local Qdrant vector database via Docker Compose
 - Pluggable ingestion pipeline for `pdf`, `json`, `xml`, and `txt`
 - Starter Flask API that accepts `{"text": "..."}` and retrieves supporting context before calling a `pydantic-ai` agent
-- Prompt file at `/home/runner/work/text_classifier/text_classifier/prompts/dsm_v_review.txt` so you can iterate on behavior without changing code
+- Prompt file at `prompts/dsm_v_review.txt` so you can iterate on behavior without changing code
 
 ## Project layout
 
-- `/home/runner/work/text_classifier/text_classifier/data/` — drop source files here
-- `/home/runner/work/text_classifier/text_classifier/prompts/dsm_v_review.txt` — agent system prompt
-- `/home/runner/work/text_classifier/text_classifier/src/text_classifier/ingest.py` — document loading, chunking, vector upload entry point
-- `/home/runner/work/text_classifier/text_classifier/src/text_classifier/app.py` — Flask API
-- `/home/runner/work/text_classifier/text_classifier/docker-compose.yml` — Qdrant + devcontainer service
+- `data/` — drop source files here
+- `prompts/dsm_v_review.txt` — agent system prompt
+- `src/text_classifier/ingest.py` — document loading, chunking, vector upload entry point
+- `src/text_classifier/app.py` — Flask API
+- `docker-compose.yml` — Qdrant + devcontainer service
 
 ## Quick start
 
@@ -29,7 +29,7 @@ Starter workspace for experimenting with `pydantic-ai` agents that review DSM-V-
    python -m pip install -e .[dev]
    ```
 
-5. Put your PDFs or other supported files into `/home/runner/work/text_classifier/text_classifier/data/`.
+5. Put your PDFs or other supported files into `data/`.
 6. Build the vector index:
 
    ```bash
@@ -67,7 +67,7 @@ Supported extensions are configured with `DATA_FILE_TYPES` in `.env`:
 DATA_FILE_TYPES=.pdf,.json,.xml,.txt
 ```
 
-The loader registry lives in `/home/runner/work/text_classifier/text_classifier/src/text_classifier/loaders.py`.
+The loader registry lives in `src/text_classifier/loaders.py`.
 
 - To enable only PDFs, set `DATA_FILE_TYPES=.pdf`
 - To ingest XML and JSON, set `DATA_FILE_TYPES=.xml,.json`

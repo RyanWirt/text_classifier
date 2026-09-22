@@ -73,3 +73,47 @@ def test_review_endpoint_rejects_blank_text():
     response = client.post("/review", json={"text": "  "})
 
     assert response.status_code == 400
+
+
+def test_review_endpoint_rejects_invalid_json():
+    class NeverCalledReviewService:
+        def review(self, text):
+            raise AssertionError("review should not be called for invalid json")
+
+    app = create_app(review_service=NeverCalledReviewService())
+    client = app.test_client()
+
+    response = client.post(
+        "/review",
+        data='{"text": "missing end"',
+        content_type="application/json",
+    )
+
+    assert response.status_code == 400
+    assert response.get_json()["error"] == "Invalid JSON body"
+
+
+def test_review_endpoint_rejects_missing_text():
+    class NeverCalledReviewService:
+        def review(self, text):
+            raise AssertionError("review should not be called for invalid payloads")
+
+    app = create_app(review_service=NeverCalledReviewService())
+    client = app.test_client()
+
+    response = client.post("/review", json={})
+
+    assert response.status_code == 400
+
+
+def test_review_endpoint_rejects_non_string_text():
+    class NeverCalledReviewService:
+        def review(self, text):
+            raise AssertionError("review should not be called for invalid payloads")
+
+    app = create_app(review_service=NeverCalledReviewService())
+    client = app.test_client()
+
+    response = client.post("/review", json={"text": {"value": "wrong type"}})
+
+    assert response.status_code == 400

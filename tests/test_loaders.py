@@ -49,3 +49,18 @@ def test_chunk_document_preserves_source_metadata():
     assert chunks[0].chunk_id == "data/reference.txt::chunk-1"
     assert chunks[0].metadata["source_path"] == "data/reference.txt"
     assert chunks[0].metadata["chunk_index"] == 1
+
+
+def test_chunk_text_rejects_overlap_not_smaller_than_chunk_size():
+    document = SourceDocument(
+        source_id="data/reference.txt",
+        text="some example text",
+        metadata={"source_path": "data/reference.txt", "source_type": ".txt"},
+    )
+
+    try:
+        chunk_document(document, chunk_size=10, chunk_overlap=10)
+    except ValueError as exc:
+        assert "chunk_overlap must be smaller than chunk_size" in str(exc)
+    else:
+        raise AssertionError("Expected chunk_document to reject invalid overlap")
