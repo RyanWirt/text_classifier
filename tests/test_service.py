@@ -81,6 +81,7 @@ def test_review_endpoint_rejects_blank_text():
     response = client.post("/review", json={"text": "  "})
 
     assert response.status_code == 400
+    assert response.get_json()["error"] == "The 'text' field must not be empty"
 
 
 def test_review_endpoint_rejects_invalid_json():
