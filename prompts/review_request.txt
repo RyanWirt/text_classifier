@@ -1,0 +1,7 @@
+Review the case description using the reference context below.
+
+Reference context:
+{reference_context}
+
+Case description:
+{case_description}

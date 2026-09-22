@@ -1,0 +1,33 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "text-classifier"
+version = "0.1.0"
+description = "Starter stack for DSM-5 review agents with pydantic-ai and Qdrant"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+  "flask>=3.1,<4.0",
+  "pydantic>=2.11,<3.0",
+  "pydantic-ai>=2.47,<3.0",
+  "pypdf>=6.19,<7.0",
+  "python-dotenv>=1.0,<2.0",
+  "qdrant-client>=1.19,<2.0"
+]
+
+[project.optional-dependencies]
+dev = [
+  "pytest>=8.4,<9.0"
+]
+
+[project.scripts]
+ingest-data = "text_classifier.ingest:main"
+run-review-api = "text_classifier.app:main"
+
+[tool.setuptools]
+package-dir = {"" = "src"}
+
+[tool.setuptools.packages.find]
+where = ["src"]
