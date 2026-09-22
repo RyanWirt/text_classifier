@@ -21,6 +21,7 @@ class ReviewService:
         matches = self.vector_store.search(text, limit=self.top_k)
         context = self._format_context(matches)
         prompt = (
+            "Review the case description using the reference context below.\n\n"
             "Reference context:\n"
             f"{context}\n\n"
             "Case description:\n"

@@ -118,15 +118,15 @@ def discover_documents(data_dir: Path, extensions: tuple[str, ...]) -> list[Path
 
 
 def chunk_text(text: str, chunk_size: int, chunk_overlap: int) -> list[str]:
-    normalized = " ".join(text.split())
-    if not normalized:
-        return []
     if chunk_size <= 0:
         raise ValueError("chunk_size must be greater than zero")
     if chunk_overlap < 0:
         raise ValueError("chunk_overlap must be zero or greater")
     if chunk_overlap >= chunk_size:
         raise ValueError("chunk_overlap must be smaller than chunk_size")
+    normalized = " ".join(text.split())
+    if not normalized:
+        return []
 
     words = normalized.split(" ")
     chunks: list[str] = []
