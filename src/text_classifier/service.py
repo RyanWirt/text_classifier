@@ -24,9 +24,7 @@ class ReviewService:
             "Reference context:\n"
             f"{context}\n\n"
             "Case description:\n"
-            f"{text.strip()}\n\n"
-            "Explain likely DSM-5 aligned diagnostic considerations, uncertainty, "
-            "and helpful follow-up questions."
+            f"{text.strip()}"
         )
         result = self.agent.run_sync(prompt)
         return ReviewResponse(response=result.output, matches=matches)

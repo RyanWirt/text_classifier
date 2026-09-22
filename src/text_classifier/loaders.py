@@ -128,17 +128,45 @@ def chunk_text(text: str, chunk_size: int, chunk_overlap: int) -> list[str]:
     if chunk_overlap >= chunk_size:
         raise ValueError("chunk_overlap must be smaller than chunk_size")
 
+    words = normalized.split(" ")
     chunks: list[str] = []
     start = 0
-    text_length = len(normalized)
-    while start < text_length:
-        end = min(text_length, start + chunk_size)
-        chunk = normalized[start:end].strip()
-        if chunk:
-            chunks.append(chunk)
-        if end >= text_length:
+    while start < len(words):
+        current_words: list[str] = []
+        current_length = 0
+        end = start
+
+        while end < len(words):
+            next_word = words[end]
+            next_length = len(next_word) if not current_words else current_length + 1 + len(next_word)
+            if current_words and next_length > chunk_size:
+                break
+            current_words.append(next_word)
+            current_length = next_length
+            end += 1
+
+        if not current_words:
+            current_words.append(words[start])
+            end = start + 1
+
+        chunks.append(" ".join(current_words))
+        if end >= len(words):
             break
-        start = max(end - chunk_overlap, start + 1)
+        if chunk_overlap == 0:
+            start = end
+            continue
+
+        overlap_length = 0
+        overlap_words = 0
+        for index in range(end - 1, start - 1, -1):
+            next_length = len(words[index]) if overlap_words == 0 else overlap_length + 1 + len(words[index])
+            if next_length > chunk_overlap:
+                break
+            overlap_length = next_length
+            overlap_words += 1
+
+        next_start = end - overlap_words if overlap_words else end
+        start = next_start if next_start > start else end
     return chunks
 
 

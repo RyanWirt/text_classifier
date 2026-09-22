@@ -128,3 +128,5 @@ def test_review_endpoint_rejects_non_string_text():
     response = client.post("/review", json={"text": {"value": "wrong type"}})
 
     assert response.status_code == 400
+    assert response.get_json()["error"] == "Invalid request body"
+    assert response.get_json()["details"]

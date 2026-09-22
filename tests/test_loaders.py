@@ -64,3 +64,16 @@ def test_chunk_text_rejects_overlap_not_smaller_than_chunk_size():
         assert "chunk_overlap must be smaller than chunk_size" in str(exc)
     else:
         raise AssertionError("Expected chunk_document to reject invalid overlap")
+
+
+def test_chunk_document_prefers_word_boundaries():
+    document = SourceDocument(
+        source_id="data/reference.txt",
+        text="alpha beta gamma delta epsilon zeta",
+        metadata={"source_path": "data/reference.txt", "source_type": ".txt"},
+    )
+
+    chunks = chunk_document(document, chunk_size=12, chunk_overlap=4)
+
+    assert all(" " in chunk.text or len(chunk.text.split()) == 1 for chunk in chunks)
+    assert all(not chunk.text.endswith(("alp", "bet", "gam")) for chunk in chunks)
