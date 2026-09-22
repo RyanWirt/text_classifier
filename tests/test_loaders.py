@@ -1,0 +1,51 @@
+from text_classifier.loaders import (
+    DocumentLoaderRegistry,
+    SourceDocument,
+    chunk_document,
+    discover_documents,
+)
+
+
+def test_discover_documents_filters_supported_extensions(tmp_path):
+    data_dir = tmp_path / "data"
+    data_dir.mkdir()
+    (data_dir / "a.txt").write_text("alpha", encoding="utf-8")
+    (data_dir / "b.json").write_text('{"name":"beta"}', encoding="utf-8")
+    (data_dir / "c.csv").write_text("ignore", encoding="utf-8")
+
+    paths = discover_documents(data_dir, (".txt", ".json"))
+
+    assert [path.name for path in paths] == ["a.txt", "b.json"]
+
+
+def test_registry_loads_json_xml_and_text(tmp_path):
+    registry = DocumentLoaderRegistry()
+    json_path = tmp_path / "sample.json"
+    xml_path = tmp_path / "sample.xml"
+    txt_path = tmp_path / "sample.txt"
+    json_path.write_text('{"symptom":"anxiety"}', encoding="utf-8")
+    xml_path.write_text("<root><item>panic</item></root>", encoding="utf-8")
+    txt_path.write_text("flat affect", encoding="utf-8")
+
+    loaded = {
+        path.suffix: registry.load(path)[0].text
+        for path in [json_path, xml_path, txt_path]
+    }
+
+    assert '"symptom": "anxiety"' in loaded[".json"]
+    assert loaded[".xml"] == "panic"
+    assert loaded[".txt"] == "flat affect"
+
+
+def test_chunk_document_preserves_source_metadata():
+    document = SourceDocument(
+        source_id="data/reference.txt",
+        text="abcdef ghijkl mnopqr stuvwx yz",
+        metadata={"source_path": "data/reference.txt", "source_type": ".txt"},
+    )
+    chunks = chunk_document(document, chunk_size=8, chunk_overlap=2)
+
+    assert len(chunks) > 1
+    assert chunks[0].chunk_id == "data/reference.txt::chunk-1"
+    assert chunks[0].metadata["source_path"] == "data/reference.txt"
+    assert chunks[0].metadata["chunk_index"] == 1

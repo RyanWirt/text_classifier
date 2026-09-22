@@ -1,0 +1,3 @@
+[console_scripts]
+ingest-data = text_classifier.ingest:main
+run-review-api = text_classifier.app:main
