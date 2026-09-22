@@ -1,6 +1,6 @@
 # text_classifier
 
-Starter workspace for experimenting with `pydantic-ai` agents that review DSM-V-style reference material and respond to JSON requests from a Flask app through a separate LiteLLM instance.
+Starter workspace for experimenting with `pydantic-ai` agents that review DSM-5-style reference material and respond to JSON requests from a Flask app through a separate LiteLLM instance.
 
 ## What is included
 

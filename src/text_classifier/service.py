@@ -25,7 +25,7 @@ class ReviewService:
             f"{context}\n\n"
             "Case description:\n"
             f"{text.strip()}\n\n"
-            "Explain likely DSM-V aligned diagnostic considerations, uncertainty, "
+            "Explain likely DSM-5 aligned diagnostic considerations, uncertainty, "
             "and helpful follow-up questions."
         )
         result = self.agent.run_sync(prompt)

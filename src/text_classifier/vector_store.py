@@ -5,6 +5,7 @@ from dataclasses import dataclass
 from uuid import NAMESPACE_URL, uuid5
 
 from qdrant_client import QdrantClient
+from qdrant_client.http.exceptions import UnexpectedResponse
 from qdrant_client.models import Distance, PointStruct, VectorParams
 
 from text_classifier.config import Settings
@@ -88,7 +89,11 @@ class VectorStore:
     def _ensure_collection(self, vector_size: int) -> None:
         if self.client.collection_exists(self.collection_name):
             return
-        self.client.create_collection(
-            collection_name=self.collection_name,
-            vectors_config=VectorParams(size=vector_size, distance=Distance.COSINE),
-        )
+        try:
+            self.client.create_collection(
+                collection_name=self.collection_name,
+                vectors_config=VectorParams(size=vector_size, distance=Distance.COSINE),
+            )
+        except UnexpectedResponse:
+            if not self.client.collection_exists(self.collection_name):
+                raise

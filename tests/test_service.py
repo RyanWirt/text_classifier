@@ -20,7 +20,7 @@ class FakeVectorStore:
         assert limit == 2
         return [
             SearchResult(
-                text="Relevant DSM-V excerpt",
+                text="Relevant DSM-5 excerpt",
                 score=0.91,
                 metadata={"source_path": "data/reference.pdf"},
             )
@@ -34,7 +34,7 @@ def test_review_service_uses_retrieved_context():
     result = service.review("patient text")
 
     assert result.response == "clinical summary"
-    assert "Relevant DSM-V excerpt" in agent.last_prompt
+    assert "Relevant DSM-5 excerpt" in agent.last_prompt
     assert "data/reference.pdf" in agent.last_prompt
 
 
@@ -59,7 +59,15 @@ def test_review_endpoint_accepts_json():
     response = client.post("/review", json={"text": "patient text"})
 
     assert response.status_code == 200
-    assert response.get_json()["response"] == "ok"
+    body = response.get_json()
+    assert body["response"] == "ok"
+    assert body["matches"] == [
+        {
+            "score": 0.8,
+            "text": "context",
+            "metadata": {"source_path": "data/reference.pdf"},
+        }
+    ]
 
 
 def test_review_endpoint_rejects_blank_text():
@@ -104,6 +112,8 @@ def test_review_endpoint_rejects_missing_text():
     response = client.post("/review", json={})
 
     assert response.status_code == 400
+    assert response.get_json()["error"] == "Invalid request body"
+    assert response.get_json()["details"]
 
 
 def test_review_endpoint_rejects_non_string_text():

@@ -5,7 +5,7 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "text-classifier"
 version = "0.1.0"
-description = "Starter stack for DSM-V review agents with pydantic-ai and Qdrant"
+description = "Starter stack for DSM-5 review agents with pydantic-ai and Qdrant"
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
