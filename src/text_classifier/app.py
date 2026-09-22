@@ -6,7 +6,7 @@ from werkzeug.exceptions import BadRequest
 
 from text_classifier.agent import build_agent
 from text_classifier.config import Settings, get_settings
-from text_classifier.service import ReviewService
+from text_classifier.service import ReviewService, load_review_prompt_template
 from text_classifier.vector_store import VectorStore
 
 
@@ -22,6 +22,7 @@ def create_app(
         agent=build_agent(settings),
         vector_store=VectorStore.from_settings(settings),
         top_k=settings.top_k,
+        prompt_template=load_review_prompt_template(settings.review_prompt_file),
     )
     app = Flask(__name__)
 

@@ -77,3 +77,18 @@ def test_chunk_document_prefers_word_boundaries():
 
     assert all(" " in chunk.text or len(chunk.text.split()) == 1 for chunk in chunks)
     assert all(not chunk.text.endswith(("alp", "bet", "gam")) for chunk in chunks)
+
+
+def test_chunk_document_rejects_single_token_longer_than_chunk_size():
+    document = SourceDocument(
+        source_id="data/reference.txt",
+        text="supercalifragilisticexpialidocious",
+        metadata={"source_path": "data/reference.txt", "source_type": ".txt"},
+    )
+
+    try:
+        chunk_document(document, chunk_size=10, chunk_overlap=2)
+    except ValueError as exc:
+        assert "single token exceeds chunk_size" in str(exc)
+    else:
+        raise AssertionError("Expected chunk_document to reject oversized tokens")

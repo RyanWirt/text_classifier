@@ -138,6 +138,10 @@ def chunk_text(text: str, chunk_size: int, chunk_overlap: int) -> list[str]:
 
         while end < len(words):
             next_word = words[end]
+            if not current_words and len(next_word) > chunk_size:
+                raise ValueError(
+                    "A single token exceeds chunk_size; increase chunk_size or preprocess the input"
+                )
             next_length = len(next_word) if not current_words else current_length + 1 + len(next_word)
             if current_words and next_length > chunk_size:
                 break
@@ -146,8 +150,9 @@ def chunk_text(text: str, chunk_size: int, chunk_overlap: int) -> list[str]:
             end += 1
 
         if not current_words:
-            current_words.append(words[start])
-            end = start + 1
+            raise ValueError(
+                "Unable to build a chunk from the provided text"
+            )
 
         chunks.append(" ".join(current_words))
         if end >= len(words):

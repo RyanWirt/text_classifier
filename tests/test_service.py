@@ -38,6 +38,21 @@ def test_review_service_uses_retrieved_context():
     assert "data/reference.pdf" in agent.last_prompt
 
 
+def test_review_service_uses_configurable_prompt_template():
+    agent = FakeAgent()
+    service = ReviewService(
+        agent=agent,
+        vector_store=FakeVectorStore(),
+        top_k=2,
+        prompt_template="CTX={reference_context}\nCASE={case_description}",
+    )
+
+    service.review("patient text")
+
+    assert agent.last_prompt.startswith("CTX=")
+    assert "CASE=patient text" in agent.last_prompt
+
+
 def test_review_endpoint_accepts_json():
     class FakeReviewService:
         def review(self, text):

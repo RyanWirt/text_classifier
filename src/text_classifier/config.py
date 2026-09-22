@@ -37,6 +37,7 @@ class Settings:
     litellm_chat_model: str
     litellm_embedding_model: str
     agent_prompt_file: Path
+    review_prompt_file: Path
 
 
 def get_settings() -> Settings:
@@ -59,5 +60,9 @@ def get_settings() -> Settings:
         agent_prompt_file=_resolve_path(
             os.getenv("AGENT_PROMPT_FILE", "prompts/dsm_v_review.txt"),
             REPO_ROOT / "prompts" / "dsm_v_review.txt",
+        ),
+        review_prompt_file=_resolve_path(
+            os.getenv("REVIEW_PROMPT_FILE", "prompts/review_request.txt"),
+            REPO_ROOT / "prompts" / "review_request.txt",
         ),
     )

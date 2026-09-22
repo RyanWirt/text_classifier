@@ -20,6 +20,7 @@ def build_settings(tmp_path):
         litellm_chat_model="openai/gpt-4.1-mini",
         litellm_embedding_model="openai/text-embedding-3-small",
         agent_prompt_file=tmp_path / "prompt.txt",
+        review_prompt_file=tmp_path / "review_prompt.txt",
     )
 
 

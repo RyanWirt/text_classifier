@@ -8,12 +8,13 @@ Starter workspace for experimenting with `pydantic-ai` agents that review DSM-5-
 - Local Qdrant vector database via Docker Compose
 - Pluggable ingestion pipeline for `pdf`, `json`, `xml`, and `txt`
 - Starter Flask API that accepts `{"text": "..."}` and retrieves supporting context before calling a `pydantic-ai` agent
-- Prompt file at `prompts/dsm_v_review.txt` so you can iterate on behavior without changing code
+- Prompt files at `prompts/dsm_v_review.txt` and `prompts/review_request.txt` so you can iterate on behavior without changing code
 
 ## Project layout
 
 - `data/` — drop source files here
 - `prompts/dsm_v_review.txt` — agent system prompt
+- `prompts/review_request.txt` — request template for retrieved context + case text
 - `src/text_classifier/ingest.py` — document loading, chunking, vector upload entry point
 - `src/text_classifier/app.py` — Flask API
 - `docker-compose.yml` — Qdrant + devcontainer service
@@ -21,6 +22,10 @@ Starter workspace for experimenting with `pydantic-ai` agents that review DSM-5-
 ## Quick start
 
 1. Copy `.env.example` to `.env`.
+
+   ```bash
+   cp .env.example .env
+   ```
 2. Update `LITELLM_BASE_URL`, `LITELLM_API_KEY`, `LITELLM_CHAT_MODEL`, and `LITELLM_EMBEDDING_MODEL` to match your separate LiteLLM instance. The starter defaults use LiteLLM-style model names such as `openai/gpt-4.1-mini`.
 3. Open the repository in the dev container, or run `docker compose up -d qdrant` locally.
 4. Install dependencies:
